@@ -1,5 +1,6 @@
 package tuti.desi.entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 import tuti.desi.enums.EstadoPropiedad;
