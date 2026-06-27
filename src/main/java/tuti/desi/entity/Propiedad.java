@@ -15,6 +15,79 @@ import tuti.desi.enums.TipoPropiedad;
 @AllArgsConstructor
 public class Propiedad {
 
+    
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDireccion() {
+        return direccion;
+    }
+
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public String getBarrio() {
+        return barrio;
+    }
+
+    public void setBarrio(String barrio) {
+        this.barrio = barrio;
+    }
+
+    public String getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
+
+    public TipoPropiedad getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoPropiedad tipo) {
+        this.tipo = tipo;
+    }
+
+    public Integer getAmbientes() {
+        return ambientes;
+    }
+
+    public void setAmbientes(Integer ambientes) {
+        this.ambientes = ambientes;
+    }
+
+    public Integer getMetrosCuadrados() {
+        return metrosCuadrados;
+    }
+
+    public void setMetrosCuadrados(Integer metrosCuadrados) {
+        this.metrosCuadrados = metrosCuadrados;
+    }
+
+    public EstadoPropiedad getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPropiedad estado) {
+        this.estado = estado;
+    }
+
+    public Propietario getPropietario() {
+        return propietario;
+    }
+
+    public void setPropietario(Propietario propietario) {
+        this.propietario = propietario;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

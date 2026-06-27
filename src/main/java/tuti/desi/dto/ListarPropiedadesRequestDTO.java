@@ -1,13 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package tuti.desi.dto;
 
-/**
- *
- * @author Ceci
- */
+import lombok.Getter;
+import lombok.Setter;
+import tuti.desi.enums.EstadoPropiedad;
+
+@Getter
+@Setter
 public class ListarPropiedadesRequestDTO {
-    
+    private EstadoPropiedad estado;
+
+    public EstadoPropiedad getEstado() {
+        return estado;
+    }
+
+    public void setEstado(EstadoPropiedad estado) {
+        this.estado = estado;
+    }
 }
