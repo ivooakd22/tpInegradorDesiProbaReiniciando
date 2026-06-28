@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Publicaciones')}"></head>
+
+<body>
+
+    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2><i class="bi bi-megaphone me-2"></i>Publicaciones</h2>
+            <a href="/publicaciones/nuevo" class="btn btn-primary">
+                <i class="bi bi-plus-lg me-1"></i> Nueva Publicacion
+            </a>
+        </div>
+
+        <form th:action="@{/publicaciones}" method="get" class="row g-3 mb-4">
+            <!-- Propiedad -->
+            <div class="col-md-3">
+                <label for="propiedadId" class="form-label">Propiedad</label>
+                <select id="propiedadId" name="propiedadId" class="form-select">
+                    <option value="">-- Todas --</option>
+                    <option th:each="prop : ${propiedades}" th:value="${prop.id}"
+                        th:text="|${prop.direccion}, ${prop.barrio}, ${prop.ciudad}|">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Ciudad -->
+            <div class="col-md-3">
+                <label for="ciudad" class="form-label">Ciudad</label>
+                <input type="text" id="ciudad" name="ciudad" class="form-control" th:value="${request.ciudad}">
+            </div>
+
+            <!-- Estado -->
+            <div class="col-md-3">
+                <label for="estado" class="form-label">Estado</label>
+                <select id="estado" name="estado" class="form-select">
+                    <option value="">-- Todos --</option>
+                    <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"
+                        th:selected="${request.estado == e}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Rango de precio -->
+            <div class="col-md-3">
+                <label class="form-label">Precio mensual</label>
+                <div class="input-group">
+                    <input type="number" name="precioMin" class="form-control" placeholder="Mínimo"
+                        th:value="${request.precioMin}">
+                    <input type="number" name="precioMax" class="form-control" placeholder="Máximo"
+                        th:value="${request.precioMax}">
+                </div>
+            </div>
+
+            <!-- Botón -->
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </form>
+
+
+        <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle me-2"></i>
+            <span th:text="${mensajeExito}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <span th:text="${mensajeError}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="card">
+            <div class="card-body p-0">
+                <div th:if="${#lists.isEmpty(publicaciones)}" class="text-center text-muted py-5">
+                    <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                    No hay publicaciones registradas. <a href="/publicaciones/nuevo">Agregar la primera</a>.
+                </div>
+
+                <table th:if="${!#lists.isEmpty(publicaciones)}" class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Dirección</th>
+                            <th>Ciudad</th>
+                            <th>Precio mensual</th>
+                            <th>Fecha</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${publicaciones}">
+                            <td th:text="${p.id}"></td>
+                            <td>
+                                <strong th:text="${p.propiedad.direccion}"></strong>
+                                <small th:if="${p.propiedad.barrio}" class="text-muted d-block"
+                                    th:text="${p.propiedad.barrio}"></small>
+                            </td>
+                            <td th:text="${p.propiedad.ciudad}"></td>
+                            <td th:text="${p.precioMensual}"></td>
+                            <td th:text="${p.fechaPublicacion}"></td>
+                            <td>
+                                <span class="badge" th:text="${p.estado}" th:classappend="${p.estado.name() == 'ACTIVA'} ? 'bg-success'
+                                        : (${p.estado.name() == 'PAUSADA'} ? 'bg-warning text-dark'
+                                        : (${p.estado.name() == 'FINALIZADA'} ? 'bg-info text-dark'
+                                        : 'bg-secondary'))">
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <a th:href="@{/publicaciones/{id}/editar(id=${p.id})}"
+                                    class="btn btn-sm btn-outline-warning me-1" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <form th:action="@{/publicaciones/{id}/eliminar(id=${p.id})}" method="post"
+                                    style="display:inline" onsubmit="return confirm('¿Eliminar esta publicación?')">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+
+</html>
