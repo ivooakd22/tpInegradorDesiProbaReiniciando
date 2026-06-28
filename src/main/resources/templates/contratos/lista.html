@@ -8,20 +8,72 @@
 <div class="container">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="bi bi-file-earmark-text me-2"></i>Contratos</h2>
+        <a href="/contratos/crear" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Nuevo Contrato
+        </a>
     </div>
 
-    <div class="card">
-        <div class="card-body text-center py-5">
-            <i class="bi bi-tools fs-1 text-muted d-block mb-3"></i>
-            <h5 class="text-muted">Módulo en construcción</h5>
-            <p class="text-muted">El ABMC de Contratos está pendiente de implementación.</p>
-            <a href="/propiedades" class="btn btn-outline-primary mt-2">
-                <i class="bi bi-arrow-left me-1"></i> Volver a Propiedades
-            </a>
-        </div>
+    <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        <span th:text="${mensajeExito}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
-</div>
+    </div>
 
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>Propiedad</th>
+                            <th>Inquilino</th>
+                            <th>Fecha Inicio</th>
+                            <th>Fecha Fin</th>
+                            <th>Precio Mensual</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                   <tbody>
+    <tr th:if="${#lists.isEmpty(contratos)}">
+        <td colspan="8" class="text-center py-4 text-muted">
+            <i class="bi bi-info-circle d-block fs-4 mb-2"></i>
+            No hay contratos registrados en el sistema.
+        </td>
+    </tr>
+    
+    <tr th:each="c : ${contratos}">
+        <td th:text="${c?.id}" class="fw-bold">1</td>
+        
+        <td th:text="${c?.propiedad != null ? c.propiedad.direccion + ' (' + c.propiedad.ciudad + ')' : 'Sin Propiedad'}">Av. Corrientes 1234</td>
+        <td th:text="${c?.inquilino != null ? c.inquilino.nombre + ' ' + c.inquilino.apellido : 'Sin Inquilino'}">Juan Perez</td>
+        
+        <td th:text="${c?.fechaInicio != null ? #temporals.format(c.fechaInicio, 'dd/MM/yyyy') : '-'}">01/01/2026</td>
+        <td th:text="${c?.fechaFin != null ? #temporals.format(c.fechaFin, 'dd/MM/yyyy') : '-'}">01/01/2028</td>
+        
+        <td th:text="${c?.precio != null ? '$' + #numbers.formatDecimal(c.precio, 1, 'POINT', 2, 'COMMA') : '$0,00'}">$250.000,00</td>
+        
+        <td>
+            <span class="badge" 
+                  th:classappend="${c?.estado != null and c.estado.name() == 'ACTIVO' ? 'bg-success' : 'bg-secondary'}"
+                  th:text="${c?.estado != null ? c.estado : 'DESCONOCIDO'}">ACTIVO</span>
+        </td>
+        <td class="text-center">
+            <div class="btn-group btn-group-sm">
+                <a th:href="@{/contratos/editar/{id}(id=${c?.id})}" class="btn btn-outline-primary" title="Editar">
+                    <i class="bi bi-pencil"></i>
+                </a>
+                <a th:href="@{/contratos/eliminar/{id}(id=${c?.id})}" class="btn btn-outline-danger" 
+                   title="Eliminar" onclick="return confirm('¿Seguro que desea eliminar este contrato?');">
+                    <i class="bi bi-trash"></i>
+                </a>
+            </div>
+        </td>
+    </tr>
+</tbody>
 <div th:replace="~{fragments/layout :: scripts}"></div>
 </body>
 </html>

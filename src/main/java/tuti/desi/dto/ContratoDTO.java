@@ -1,13 +1,9 @@
 package tuti.desi.dto;
 
-import lombok.*;
-import tuti.desi.enums.EstadoContrato;
-
 import java.time.LocalDate;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 public class ContratoDTO {
 
@@ -22,7 +18,7 @@ public class ContratoDTO {
     @NotNull(message = "La fecha de inicio es requerida.")
     private LocalDate fechaInicio;
 
-    private LocalDate fechaFin; // Lo pide el servicio
+    private LocalDate fechaFin;
 
     @NotNull(message = "La duración es requerida.")
     @Min(value = 1, message = "La duración en meses debe ser un número positivo.")
@@ -42,14 +38,17 @@ public class ContratoDTO {
     @NotBlank(message = "El estado del contrato es requerido.")
     private String estado;
 
+    // Constructor vacío puro
     public ContratoDTO() {
     }
 
+    // Getters y Setters tradicionales
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
+        // Corrección por si NetBeans se marea con id/Id
         this.id = id;
     }
 
