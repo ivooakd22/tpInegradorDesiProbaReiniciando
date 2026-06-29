@@ -1,6 +1,5 @@
 package tuti.desi.controller;
 
-import java.time.LocalDate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -37,10 +36,7 @@ public class PublicacionController {
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        PublicacionDTO dto = new PublicacionDTO();
-        dto.setFechaPublicacion(LocalDate.now());
-        dto.setEstado(EstadoPublicacion.ACTIVA);
-        model.addAttribute("publicacion", dto);
+        model.addAttribute("publicacion", new PublicacionDTO());
         ListarPropiedadesRequestDTO request = new ListarPropiedadesRequestDTO();
         request.setEstado(EstadoPropiedad.DISPONIBLE);
         model.addAttribute("propiedades", propiedadService.findAll(request));

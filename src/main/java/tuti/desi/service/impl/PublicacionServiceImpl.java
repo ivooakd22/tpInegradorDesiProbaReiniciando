@@ -1,15 +1,17 @@
 package tuti.desi.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tuti.desi.dto.ListarPublicacionesRequestDTO;
 import tuti.desi.dto.PropiedadDTO;
 import tuti.desi.dto.PublicacionDTO;
+import tuti.desi.entity.HistorialEstadoPublicacion;
 import tuti.desi.entity.Propiedad;
 import tuti.desi.entity.Publicacion;
 import tuti.desi.enums.EstadoPublicacion;
+import tuti.desi.repository.HistorialEstadoPublicacionRepository;
 import tuti.desi.repository.PropiedadRepository;
 import tuti.desi.repository.PublicacionRepository;
 import tuti.desi.service.PublicacionService;
@@ -20,11 +22,13 @@ public class PublicacionServiceImpl implements PublicacionService {
 
     private final PropiedadRepository propiedadRepository;
     private final PublicacionRepository publicacionRepository;
+    private final HistorialEstadoPublicacionRepository historialRepository;
 
     public PublicacionServiceImpl(PropiedadRepository propiedadRepository,
-            PublicacionRepository publicacionRepository) {
+            PublicacionRepository publicacionRepository, HistorialEstadoPublicacionRepository historialRepository) {
         this.propiedadRepository = propiedadRepository;
         this.publicacionRepository = publicacionRepository;
+        this.historialRepository = historialRepository;
     }
 
     @Override
@@ -47,22 +51,18 @@ public class PublicacionServiceImpl implements PublicacionService {
     public void save(PublicacionDTO dto) {
         validarDtoSaveEditar(dto);
 
-        // Si viene con id, buscamos la publicación existente, si no, creamos una nueva
         Publicacion publicacion = (dto.getId() != null)
                 ? publicacionRepository.findById(dto.getId())
                         .orElseThrow(() -> new RuntimeException("Publicación no encontrada con id: " + dto.getId()))
                 : new Publicacion();
 
-        // Validamos que la propiedad exista
         Propiedad propiedad = propiedadRepository.findById(dto.getPropiedad().getId())
                 .orElseThrow(() -> new RuntimeException("Propiedad no encontrada con id: " + dto.getPropiedad().getId()));
 
-        // Reglas de negocio del Epic 2
         if (!propiedad.isDisponible()) {
             throw new IllegalStateException("Solo se pueden publicar propiedades disponibles.");
         }
 
-        // No puede haber más de una publicación activa para la misma propiedad
         publicacionRepository.findByPropiedadAndEstado(propiedad, EstadoPublicacion.ACTIVA)
                 .ifPresent(p -> {
                     if (dto.getId() == null || !p.getId().equals(dto.getId())) {
@@ -70,15 +70,30 @@ public class PublicacionServiceImpl implements PublicacionService {
                     }
                 });
 
-        // Seteamos los datos
+        EstadoPublicacion estadoAnterior = publicacion.getEstado();
+
+        EstadoPublicacion nuevoEstado = dto.getEstado() != null
+                ? dto.getEstado()
+                : EstadoPublicacion.ACTIVA;
+
         publicacion.setPropiedad(propiedad);
         publicacion.setPrecioMensual(dto.getPrecioMensual());
         publicacion.setCondiciones(dto.getCondiciones());
         publicacion.setDescripcion(dto.getDescripcion());
         publicacion.setFechaPublicacion(dto.getFechaPublicacion());
-        publicacion.setEstado(dto.getEstado() != null ? dto.getEstado() : EstadoPublicacion.ACTIVA);
+        publicacion.setEstado(nuevoEstado);
 
         publicacionRepository.save(publicacion);
+        if (dto.getId() == null || estadoAnterior != nuevoEstado) {
+            HistorialEstadoPublicacion historial
+                    = new HistorialEstadoPublicacion();
+
+            historial.setPublicacion(publicacion);
+            historial.setEstado(nuevoEstado);
+            historial.setFechaHora(LocalDateTime.now());
+
+            historialRepository.save(historial);
+        }
     }
 
     private void validarDtoSaveEditar(PublicacionDTO dto) {
@@ -105,7 +120,7 @@ public class PublicacionServiceImpl implements PublicacionService {
     @Override
     public void delete(Long id) {
         Publicacion publicacion = publicacionRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Publicación no encontrada con id: " + id));
+                .orElseThrow(() -> new RuntimeException("Publicación no encontrada con id: " + id));
 
         if (publicacion.getEstado() != EstadoPublicacion.ACTIVA) {
             throw new IllegalStateException("Solo se pueden eliminar publicaciones en estado ACTIVA.");
