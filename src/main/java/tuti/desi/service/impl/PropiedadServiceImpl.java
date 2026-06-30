@@ -7,8 +7,12 @@ import tuti.desi.dto.PropiedadDTO;
 import tuti.desi.entity.Propiedad;
 import tuti.desi.entity.Propietario;
 import tuti.desi.enums.EstadoPropiedad;
+import tuti.desi.enums.EstadoContrato;
+import tuti.desi.enums.EstadoPublicacion;
+import tuti.desi.repository.ContratoRepository;
 import tuti.desi.repository.PropiedadRepository;
 import tuti.desi.repository.PropietarioRepository;
+import tuti.desi.repository.PublicacionRepository;
 import tuti.desi.service.EstadoPropiedadLogService;
 import tuti.desi.service.PropiedadService;
 
@@ -20,14 +24,20 @@ public class PropiedadServiceImpl implements PropiedadService {
 
     private final PropiedadRepository propiedadRepository;
     private final PropietarioRepository propietarioRepository;
+    private final ContratoRepository contratoRepository;
+    private final PublicacionRepository publicacionRepository;
     private final EstadoPropiedadLogService logService;
 
     public PropiedadServiceImpl(
             PropiedadRepository propiedadRepository,
             PropietarioRepository propietarioRepository,
+            ContratoRepository contratoRepository,
+            PublicacionRepository publicacionRepository,
             EstadoPropiedadLogService logService) {
         this.propiedadRepository = propiedadRepository;
         this.propietarioRepository = propietarioRepository;
+        this.contratoRepository = contratoRepository;
+        this.publicacionRepository = publicacionRepository;
         this.logService = logService;
     }
 
@@ -82,10 +92,19 @@ public class PropiedadServiceImpl implements PropiedadService {
 
     @Override
     public void delete(Long id) {
-        if (!propiedadRepository.existsById(id)) {
-            throw new RuntimeException("Propiedad no encontrada con id: " + id);
+        Propiedad propiedad = propiedadRepository
+            .findById(id)
+            .orElseThrow(() -> new RuntimeException("Propiedad no encontrada con id: " + id));
+
+        if (contratoRepository.existsByPropiedadIdAndEstadoAndEliminadoFalse(id, EstadoContrato.ACTIVO)) {
+            throw new IllegalStateException("No se puede eliminar: la propiedad tiene contratos activos.");
         }
-        propiedadRepository.deleteById(id);
+        if (publicacionRepository.existsByPropiedadIdAndEstadoAndEliminadaFalse(id, EstadoPublicacion.ACTIVA)) {
+            throw new IllegalStateException("No se puede eliminar: la propiedad tiene publicaciones activas.");
+        }
+
+        propiedad.setActivo(false);
+        propiedadRepository.save(propiedad);
     }
 
     private void validarDtoSaveEditar(PropiedadDTO dto) {

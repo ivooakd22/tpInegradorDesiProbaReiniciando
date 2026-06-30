@@ -28,4 +28,6 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
     );
 
     Optional<Publicacion> findByPropiedadAndEstadoAndEliminadaFalse(Propiedad propiedad, EstadoPublicacion estado);
+
+    boolean existsByPropiedadIdAndEstadoAndEliminadaFalse(Long propiedadId, EstadoPublicacion estado);
 }
