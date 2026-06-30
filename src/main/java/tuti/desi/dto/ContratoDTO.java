@@ -12,8 +12,14 @@ public class ContratoDTO {
     @NotNull(message = "Debe seleccionar una propiedad.")
     private Long propiedadId;
 
+    private String propiedadDireccion;
+
+    private String propietarioNombre;
+
     @NotNull(message = "Debe seleccionar un inquilino.")
     private Long inquilinoId;
+
+    private String inquilinoNombre;
 
     @NotNull(message = "La fecha de inicio es requerida.")
     private LocalDate fechaInicio;
@@ -38,17 +44,33 @@ public class ContratoDTO {
     @NotBlank(message = "El estado del contrato es requerido.")
     private String estado;
 
-    // Constructor vacío puro
-    public ContratoDTO() {
+   public ContratoDTO() {
+        
     }
 
-    // Getters y Setters tradicionales
+    public ContratoDTO(Long id, Long propiedadId, String propiedadDireccion, String propietarioNombre, Long inquilinoId, String inquilinoNombre, LocalDate fechaInicio, LocalDate fechaFin, Integer duracionMeses, Double montoMensual, Integer diaPago, String descripcion, String estado) {
+        this.id = id;
+        this.propiedadId = propiedadId;
+        this.propiedadDireccion = propiedadDireccion;
+        this.propietarioNombre = propietarioNombre;
+        this.inquilinoId = inquilinoId;
+        this.inquilinoNombre = inquilinoNombre;
+        this.fechaInicio = fechaInicio;
+        this.fechaFin = fechaFin;
+        this.duracionMeses = duracionMeses;
+        this.montoMensual = montoMensual;
+        this.diaPago = diaPago;
+        this.descripcion = descripcion;
+        this.estado = estado;
+    }
+
+    
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
-        // Corrección por si NetBeans se marea con id/Id
         this.id = id;
     }
 
@@ -60,12 +82,36 @@ public class ContratoDTO {
         this.propiedadId = propiedadId;
     }
 
+    public String getPropiedadDireccion() {
+        return propiedadDireccion;
+    }
+
+    public void setPropiedadDireccion(String propiedadDireccion) {
+        this.propiedadDireccion = propiedadDireccion;
+    }
+
+    public String getPropietarioNombre() {
+        return propietarioNombre;
+    }
+
+    public void setPropietarioNombre(String propietarioNombre) {
+        this.propietarioNombre = propietarioNombre;
+    }
+
     public Long getInquilinoId() {
         return inquilinoId;
     }
 
     public void setInquilinoId(Long inquilinoId) {
         this.inquilinoId = inquilinoId;
+    }
+
+    public String getInquilinoNombre() {
+        return inquilinoNombre;
+    }
+
+    public void setInquilinoNombre(String inquilinoNombre) {
+        this.inquilinoNombre = inquilinoNombre;
     }
 
     public LocalDate getFechaInicio() {
@@ -122,5 +168,14 @@ public class ContratoDTO {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+    private boolean eliminado;
+
+    public boolean isEliminado() {
+        return eliminado;
+    }
+
+    public void setEliminado(boolean eliminado) {
+        this.eliminado = eliminado;
     }
 }

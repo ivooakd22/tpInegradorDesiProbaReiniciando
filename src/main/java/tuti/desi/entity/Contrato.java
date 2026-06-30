@@ -14,12 +14,61 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Contrato {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private LocalDate fechaInicio;
+
+    @Column(nullable = false)
+    private LocalDate fechaFin;
+
+    @Column(nullable = false)
+    private Double montoMensual;
+
+    @Column(nullable = false)
+    private Integer diaPago;
+    @Column(nullable = false)
+    private Integer duracionMeses;
+
+    @Column(nullable = false, length = 255)
+    private String descripcion;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private EstadoContrato estado;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "propiedad_id", nullable = false)
+    private Propiedad propiedad;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "inquilino_id", nullable = false)
+    private Inquilino inquilino;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getDuracionMeses() {
+        return duracionMeses;
+    }
+
+    public void setDuracionMeses(Integer duracionMeses) {
+        this.duracionMeses = duracionMeses;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public LocalDate getFechaInicio() {
@@ -77,32 +126,15 @@ public class Contrato {
     public void setInquilino(Inquilino inquilino) {
         this.inquilino = inquilino;
     }
+    private boolean eliminado = false; // nuevo campo
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    // getter y setter
+    public boolean isEliminado() {
+        return eliminado;
+    }
 
-    @Column(nullable = false)
-    private LocalDate fechaInicio;
+    public void setEliminado(boolean eliminado) {
+        this.eliminado = eliminado;
+    }
 
-    @Column(nullable = false)
-    private LocalDate fechaFin;
-
-    @Column(nullable = false)
-    private Double montoMensual;
-
-    @Column(nullable = false)
-    private Integer diaPago;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private EstadoContrato estado;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "propiedad_id", nullable = false)
-    private Propiedad propiedad;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "inquilino_id", nullable = false)
-    private Inquilino inquilino;
 }

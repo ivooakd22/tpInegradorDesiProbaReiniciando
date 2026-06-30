@@ -1,26 +1,20 @@
 package tuti.desi.service;
 
+import java.time.LocalDate;
+import java.util.List;
 import tuti.desi.dto.ContratoDTO;
 import tuti.desi.dto.ListarContratosRequestDTO;
 
-import java.time.LocalDate;
-import java.util.List;
-
 public interface ContratoService {
 
-    List<ContratoDTO> findAll(ListarContratosRequestDTO request);
-
+     List<ContratoDTO> findAll(ListarContratosRequestDTO filtro);
     ContratoDTO findById(Long id);
-
-    void save(ContratoDTO dto);
-
-    void delete(Long id);
-
-    // Métodos adicionales útiles
     List<ContratoDTO> findByInquilino(Long inquilinoId);
-
     List<ContratoDTO> findByPropiedad(Long propiedadId);
-
     LocalDate calcularFechaFin(LocalDate fechaInicio, Integer duracionMeses);
+    void save(ContratoDTO dto);
+    void delete(Long id);
+  
 }
+
 

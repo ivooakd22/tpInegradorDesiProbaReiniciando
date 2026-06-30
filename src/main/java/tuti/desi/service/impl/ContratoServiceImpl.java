@@ -10,13 +10,14 @@ import tuti.desi.entity.Contrato;
 import tuti.desi.entity.Propiedad;
 import tuti.desi.entity.Inquilino;
 import tuti.desi.enums.EstadoContrato;
+import tuti.desi.enums.EstadoPropiedad;
 import tuti.desi.repository.ContratoRepository;
 import tuti.desi.repository.PropiedadRepository;
 import tuti.desi.repository.InquilinoRepository;
 import tuti.desi.service.ContratoService;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import tuti.desi.enums.EstadoPropiedad;
 
 @Service
 
@@ -32,19 +33,28 @@ public class ContratoServiceImpl implements ContratoService {
     @Autowired
     private InquilinoRepository inquilinoRepository;
 
+    
     @Override
-    public List<ContratoDTO> findAll(ListarContratosRequestDTO request) {
-        EstadoContrato estadoEnum = null;
-        if (request.getEstado() != null && !request.getEstado().isEmpty()) {
-            estadoEnum = EstadoContrato.valueOf(request.getEstado().toUpperCase());
+    public List<ContratoDTO> findAll(ListarContratosRequestDTO filtro) {
+       
+        if (filtro == null) {
+            return contratoRepository.findByEliminadoFalse()
+                    .stream().map(this::toDTO).toList();
         }
-        List<Contrato> contratos = contratoRepository.filtrar(
-                request.getPropiedadId(),
-                request.getInquilinoId(),
-                estadoEnum,
-                request.getFechaInicio());
 
-        return contratos.stream().map(this::toDTO).collect(Collectors.toList());
+        
+        EstadoContrato estadoEnum = null;
+        if (filtro.getEstado() != null && !filtro.getEstado().isBlank()) {
+            estadoEnum = EstadoContrato.valueOf(filtro.getEstado().toUpperCase());
+        }
+
+        
+        return contratoRepository.filtrar(
+                filtro.getPropiedadId(),
+                filtro.getInquilinoId(),
+                estadoEnum,
+                filtro.getFechaInicio()
+        ).stream().map(this::toDTO).toList();
     }
 
     @Override
@@ -74,29 +84,13 @@ public class ContratoServiceImpl implements ContratoService {
 
     @Override
     public void save(ContratoDTO dto) {
-        // --- Validaciones básicas ---
-        if (dto.getFechaInicio() == null || dto.getMontoMensual() == null
-                || dto.getDiaPago() == null || dto.getPropiedadId() == null
-                || dto.getInquilinoId() == null || dto.getDuracionMeses() == null) {
-            throw new IllegalArgumentException("Es necesario ingresar todos los campos obligatorios para registrar el contrato.");
-        }
-        if (dto.getMontoMensual() <= 0) {
-            throw new IllegalArgumentException("El importe mensual debe ser un número positivo.");
-        }
-        if (dto.getDuracionMeses() <= 0) {
-            throw new IllegalArgumentException("La duración del contrato debe ser un número positivo.");
-        }
-        if (dto.getDiaPago() < 1 || dto.getDiaPago() > 31) {
-            throw new IllegalArgumentException("El día de vencimiento debe ser un número entre 1 y 31.");
-        }
+        validarContrato(dto);
 
-        // --- Buscar propiedad e inquilino ---
         Propiedad propiedad = propiedadRepository.findById(dto.getPropiedadId())
                 .orElseThrow(() -> new RuntimeException("La propiedad buscada no existe"));
         Inquilino inquilino = inquilinoRepository.findById(dto.getInquilinoId())
                 .orElseThrow(() -> new RuntimeException("El inquilino buscado no existe"));
 
-        // --- Crear o recuperar contrato ---
         Contrato contrato;
         EstadoContrato nuevoEstado;
 
@@ -107,28 +101,23 @@ public class ContratoServiceImpl implements ContratoService {
             EstadoContrato estadoAnterior = contrato.getEstado();
             nuevoEstado = dto.getEstado() != null ? EstadoContrato.valueOf(dto.getEstado().toUpperCase()) : contrato.getEstado();
 
-            // Regla: no se puede volver a ACTIVO desde FINALIZADO o RESCINDIDO
             if ((estadoAnterior == EstadoContrato.FINALIZADO || estadoAnterior == EstadoContrato.RESCINDIDO)
                     && nuevoEstado == EstadoContrato.ACTIVO) {
                 throw new IllegalArgumentException("No se permite activar un contrato que ya está FINALIZADO o RESCINDIDO.");
             }
 
-            // Actualizar estado de la propiedad según el contrato
-            if (nuevoEstado == EstadoContrato.ACTIVO || nuevoEstado == EstadoContrato.FINALIZADO || nuevoEstado == EstadoContrato.RESCINDIDO) {
-                if (nuevoEstado == EstadoContrato.ACTIVO) {
-                    propiedad.setEstado(EstadoPropiedad.ALQUILADA);
-                } else {
-                    propiedad.setEstado(EstadoPropiedad.DISPONIBLE);
-                }
-                propiedadRepository.save(propiedad);
+            if (nuevoEstado == EstadoContrato.ACTIVO) {
+                propiedad.setEstado(EstadoPropiedad.ALQUILADA);
+            } else if (nuevoEstado == EstadoContrato.FINALIZADO || nuevoEstado == EstadoContrato.RESCINDIDO) {
+                propiedad.setEstado(EstadoPropiedad.DISPONIBLE);
             }
+            propiedadRepository.save(propiedad);
 
         } else {
             contrato = new Contrato();
             nuevoEstado = dto.getEstado() != null ? EstadoContrato.valueOf(dto.getEstado().toUpperCase()) : EstadoContrato.BORRADOR;
         }
 
-        // --- Reglas de negocio para estado ACTIVO ---
         if (nuevoEstado == EstadoContrato.ACTIVO) {
             if (propiedad.getEstado() != null && !"DISPONIBLE".equalsIgnoreCase(propiedad.getEstado().toString())) {
                 throw new IllegalArgumentException("No se puede crear un contrato si la propiedad no está disponible.");
@@ -141,7 +130,6 @@ public class ContratoServiceImpl implements ContratoService {
             propiedadRepository.save(propiedad);
         }
 
-        // Mapear datos
         contrato.setFechaInicio(dto.getFechaInicio());
         if (dto.getFechaFin() == null) {
             throw new IllegalArgumentException("Debe ingresar la fecha de fin del contrato.");
@@ -152,6 +140,9 @@ public class ContratoServiceImpl implements ContratoService {
         contrato.setEstado(nuevoEstado);
         contrato.setPropiedad(propiedad);
         contrato.setInquilino(inquilino);
+        contrato.setDescripcion(dto.getDescripcion());
+        contrato.setDuracionMeses(dto.getDuracionMeses());
+        contrato.setEliminado(dto.isEliminado());
 
         contratoRepository.save(contrato);
     }
@@ -163,10 +154,11 @@ public class ContratoServiceImpl implements ContratoService {
         if (contrato.getEstado() != EstadoContrato.BORRADOR) {
             throw new IllegalArgumentException("Solo se pueden borrar contratos en estado BORRADOR.");
         }
-        contratoRepository.delete(contrato);
+        contrato.setEliminado(true);
+        contratoRepository.save(contrato);
     }
 
-    // --- Métodos auxiliares ---
+    
     private void validarContrato(ContratoDTO dto) {
         if (dto.getFechaInicio() == null || dto.getMontoMensual() == null
                 || dto.getDiaPago() == null || dto.getPropiedadId() == null
@@ -196,10 +188,18 @@ public class ContratoServiceImpl implements ContratoService {
         }
         if (c.getPropiedad() != null) {
             dto.setPropiedadId(c.getPropiedad().getId());
+            dto.setPropiedadDireccion(c.getPropiedad().getDireccion());
+            if (c.getPropiedad().getPropietario() != null) {
+                dto.setPropietarioNombre(c.getPropiedad().getPropietario().getNombre());
+            }
+            if (c.getInquilino() != null) {
+                dto.setInquilinoId(c.getInquilino().getId());
+                dto.setInquilinoNombre(c.getInquilino().getNombre());
+            }
+            dto.setEliminado(c.isEliminado());
+            return dto;
+
         }
-        if (c.getInquilino() != null) {
-            dto.setInquilinoId(c.getInquilino().getId());
-        }
-        return dto;
+        return null;
     }
 }
