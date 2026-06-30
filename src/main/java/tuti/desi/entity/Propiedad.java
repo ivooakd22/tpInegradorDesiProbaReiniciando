@@ -43,4 +43,8 @@ public class Propiedad {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "propietario_id", nullable = false)
     private Propietario propietario;
+    
+    public boolean isDisponible() {
+        return this.estado == EstadoPropiedad.DISPONIBLE;
+    }
 }
