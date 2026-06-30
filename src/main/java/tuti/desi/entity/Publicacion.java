@@ -1,6 +1,7 @@
 package tuti.desi.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.*;
 import tuti.desi.enums.EstadoPublicacion;
@@ -22,7 +23,7 @@ public class Publicacion {
     private Propiedad propiedad;
 
     @Column(name = "precio_mensual", nullable = false)
-    private Integer precioMensual;
+    private BigDecimal precioMensual;
 
     @Column(nullable = false, length = 200)
     private String condiciones;

@@ -1,5 +1,6 @@
 package tuti.desi.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -11,7 +12,7 @@ public class PublicacionDTO {
 
     private PropiedadDTO propiedad;
 
-    private Integer precioMensual;
+    private BigDecimal precioMensual;
 
     private String condiciones;
 
@@ -40,11 +41,11 @@ public class PublicacionDTO {
         this.propiedad = propiedad;
     }
 
-    public Integer getPrecioMensual() {
+    public BigDecimal getPrecioMensual() {
         return precioMensual;
     }
 
-    public void setPrecioMensual(Integer precioMensual) {
+    public void setPrecioMensual(BigDecimal precioMensual) {
         this.precioMensual = precioMensual;
     }
 

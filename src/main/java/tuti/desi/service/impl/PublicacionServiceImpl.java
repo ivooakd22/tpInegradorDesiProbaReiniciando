@@ -1,5 +1,6 @@
 package tuti.desi.service.impl;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -113,7 +114,8 @@ public class PublicacionServiceImpl implements PublicacionService {
         if (dto.getPropiedad().getId() == null) {
             throw new IllegalArgumentException("La propiedad es obligatoria.");
         }
-        if (dto.getPrecioMensual() == null || dto.getPrecioMensual() <= 0) {
+        if (dto.getPrecioMensual() == null
+                || dto.getPrecioMensual().compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("El precio mensual debe ser mayor a 0.");
         }
         if (dto.getCondiciones() == null || dto.getCondiciones().isBlank()) {
