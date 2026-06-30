@@ -66,7 +66,7 @@ public class PropiedadController {
         model.addAttribute("tipos", TipoPropiedad.values());
         model.addAttribute("estados", EstadoPropiedad.values());
         model.addAttribute("propietarios", propietarioService.findAll());
-       // model.addAttribute("propietarioSeleccionado", dto.getPropietarioId());
+        model.addAttribute("propietarioSeleccionado", dto.getPropietarioId());
         model.addAttribute("titulo", "Editar Propiedad");
         model.addAttribute("formAction", "/propiedades/" + id);
         return "propiedades/form";
@@ -75,7 +75,7 @@ public class PropiedadController {
     @PostMapping("/{id}")
     public String actualizar(@PathVariable Long id, @ModelAttribute PropiedadDTO dto,
                              Model model, RedirectAttributes redirectAttributes) {
-        //dto.setId(id);
+        dto.setId(id);
         try {
             service.save(dto);
             redirectAttributes.addFlashAttribute("mensajeExito", "Propiedad actualizada correctamente.");
@@ -86,7 +86,7 @@ public class PropiedadController {
             model.addAttribute("tipos", TipoPropiedad.values());
             model.addAttribute("estados", EstadoPropiedad.values());
             model.addAttribute("propietarios", propietarioService.findAll());
-            //model.addAttribute("propietarioSeleccionado", dto.getPropietarioId());
+            model.addAttribute("propietarioSeleccionado", dto.getPropietarioId());
             model.addAttribute("titulo", "Editar Propiedad");
             model.addAttribute("formAction", "/propiedades/" + id);
             return "propiedades/form";

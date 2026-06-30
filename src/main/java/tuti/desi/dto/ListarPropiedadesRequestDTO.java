@@ -10,4 +10,14 @@ import tuti.desi.enums.EstadoPropiedad;
 public class ListarPropiedadesRequestDTO {
 
     private EstadoPropiedad estado;
+
+	public EstadoPropiedad getEstado() {
+		return estado;
+	}
+
+	public void setEstado(EstadoPropiedad estado) {
+		this.estado = estado;
+	}
+    
+    
 }
