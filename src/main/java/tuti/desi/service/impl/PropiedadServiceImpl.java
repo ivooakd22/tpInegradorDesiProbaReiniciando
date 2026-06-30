@@ -6,8 +6,10 @@ import tuti.desi.dto.ListarPropiedadesRequestDTO;
 import tuti.desi.dto.PropiedadDTO;
 import tuti.desi.entity.Propiedad;
 import tuti.desi.entity.Propietario;
+import tuti.desi.enums.EstadoPropiedad;
 import tuti.desi.repository.PropiedadRepository;
 import tuti.desi.repository.PropietarioRepository;
+import tuti.desi.service.EstadoPropiedadLogService;
 import tuti.desi.service.PropiedadService;
 
 import java.util.List;
@@ -18,12 +20,15 @@ public class PropiedadServiceImpl implements PropiedadService {
 
     private final PropiedadRepository propiedadRepository;
     private final PropietarioRepository propietarioRepository;
+    private final EstadoPropiedadLogService logService;
 
     public PropiedadServiceImpl(
-        PropiedadRepository propiedadRepository,
-        PropietarioRepository propietarioRepository) {
+            PropiedadRepository propiedadRepository,
+            PropietarioRepository propietarioRepository,
+            EstadoPropiedadLogService logService) {
         this.propiedadRepository = propiedadRepository;
         this.propietarioRepository = propietarioRepository;
+        this.logService = logService;
     }
 
     @Override
@@ -46,14 +51,17 @@ public class PropiedadServiceImpl implements PropiedadService {
     public void save(PropiedadDTO dto) {
         validarDtoSaveEditar(dto);
 
-        Propiedad propiedad = (dto.getId() != null) 
-            ? propiedadRepository
-                .findById(dto.getId())
-                .orElseThrow(() -> new RuntimeException("Propiedad no encontrada con id: " + dto.getId()))
-            : new Propiedad();
+        Propiedad propiedad = (dto.getId() != null)
+                ? propiedadRepository
+                    .findById(dto.getId())
+                    .orElseThrow(() -> new RuntimeException("Propiedad no encontrada con id: " + dto.getId()))
+                : new Propiedad();
 
         Propietario propietario = propietarioRepository.findById(dto.getPropietarioId())
                 .orElseThrow(() -> new RuntimeException("Propietario no encontrado con id: " + dto.getPropietarioId()));
+
+        EstadoPropiedad estadoAnterior = propiedad.getEstado();
+        EstadoPropiedad estadoNuevo = (dto.getEstado() != null) ? dto.getEstado() : EstadoPropiedad.DISPONIBLE;
 
         propiedad.setDireccion(dto.getDireccion());
         propiedad.setBarrio(dto.getBarrio());
@@ -61,10 +69,14 @@ public class PropiedadServiceImpl implements PropiedadService {
         propiedad.setTipo(dto.getTipo());
         propiedad.setAmbientes(dto.getAmbientes());
         propiedad.setMetrosCuadrados(dto.getMetrosCuadrados());
-        propiedad.setEstado(dto.getEstado());
+        propiedad.setEstado(estadoNuevo);
         propiedad.setPropietario(propietario);
 
-        propiedadRepository.save(propiedad);
+        Propiedad saved = propiedadRepository.save(propiedad);
+
+        if (estadoAnterior == null || estadoAnterior != estadoNuevo) {
+            logService.registrar(saved, estadoAnterior, estadoNuevo);
+        }
 
     }
 
