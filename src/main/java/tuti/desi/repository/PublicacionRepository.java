@@ -27,5 +27,5 @@ public interface PublicacionRepository extends JpaRepository<Publicacion, Long> 
             @Param("precioMax") Integer precioMax
     );
 
-    Optional<Publicacion> findByPropiedadAndEstado(Propiedad propiedad, EstadoPublicacion estado);
+    Optional<Publicacion> findByPropiedadAndEstadoAndEliminadaFalse(Propiedad propiedad, EstadoPublicacion estado);
 }

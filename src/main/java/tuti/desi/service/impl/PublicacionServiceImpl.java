@@ -59,16 +59,28 @@ public class PublicacionServiceImpl implements PublicacionService {
         Propiedad propiedad = propiedadRepository.findById(dto.getPropiedad().getId())
                 .orElseThrow(() -> new RuntimeException("Propiedad no encontrada con id: " + dto.getPropiedad().getId()));
 
-        if (!propiedad.isDisponible()) {
-            throw new IllegalStateException("Solo se pueden publicar propiedades disponibles.");
+        if (dto.getEstado() == EstadoPublicacion.ACTIVA) {
+            if (!propiedad.isDisponible()) {
+                throw new IllegalStateException(
+                        "Solo se pueden publicar propiedades disponibles.");
+            }
+
+            publicacionRepository.findByPropiedadAndEstadoAndEliminadaFalse(propiedad, EstadoPublicacion.ACTIVA)
+                    .ifPresent(p -> {
+                        if (dto.getId() == null || !p.getId().equals(dto.getId())) {
+                            throw new IllegalStateException(
+                                    "Ya existe una publicación activa para esta propiedad.");
+                        }
+                    });
         }
 
-        publicacionRepository.findByPropiedadAndEstado(propiedad, EstadoPublicacion.ACTIVA)
-                .ifPresent(p -> {
-                    if (dto.getId() == null || !p.getId().equals(dto.getId())) {
-                        throw new IllegalStateException("Ya existe una publicación activa para esta propiedad.");
-                    }
-                });
+        if (dto.getId() != null
+                && publicacion.getEstado() == EstadoPublicacion.FINALIZADA
+                && !publicacion.getCondiciones().equals(dto.getCondiciones())) {
+
+            throw new IllegalStateException(
+                    "No se pueden modificar las condiciones de una publicación finalizada.");
+        }
 
         EstadoPublicacion estadoAnterior = publicacion.getEstado();
 
