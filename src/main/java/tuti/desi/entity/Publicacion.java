@@ -27,7 +27,7 @@ public class Publicacion {
     @Column(nullable = false, length = 200)
     private String condiciones;
 
-    @Column(length = 100)
+    @Column(length = 100, nullable = false)
     private String descripcion;
 
     @Column(name = "fecha_publicacion", nullable = false)
@@ -37,4 +37,6 @@ public class Publicacion {
     @Column(nullable = false, length = 20)
     private EstadoPublicacion estado;
 
+    @Column(nullable = false)
+    private Boolean eliminada = false;
 }

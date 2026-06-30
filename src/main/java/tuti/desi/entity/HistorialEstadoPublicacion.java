@@ -29,13 +29,6 @@ public class HistorialEstadoPublicacion {
     private EstadoPublicacion estado;
 
     private LocalDateTime fechaHora;
-    
-    public HistorialEstadoPublicacion(Long id, Publicacion publicacion, EstadoPublicacion estado, LocalDateTime fechaHora) {
-        this.id = id;
-        this.publicacion = publicacion;
-        this.estado = estado;
-        this.fechaHora = fechaHora;
-    }
 
     public Long getId() {
         return id;
@@ -61,7 +54,7 @@ public class HistorialEstadoPublicacion {
         this.estado = estado;
     }
 
-    public LocalDateTime getFechHorao() {
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 

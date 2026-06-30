@@ -82,6 +82,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         publicacion.setDescripcion(dto.getDescripcion());
         publicacion.setFechaPublicacion(dto.getFechaPublicacion());
         publicacion.setEstado(nuevoEstado);
+        publicacion.setEliminada(dto.getEliminada());
 
         publicacionRepository.save(publicacion);
         if (dto.getId() == null || estadoAnterior != nuevoEstado) {
@@ -125,7 +126,8 @@ public class PublicacionServiceImpl implements PublicacionService {
         if (publicacion.getEstado() != EstadoPublicacion.ACTIVA) {
             throw new IllegalStateException("Solo se pueden eliminar publicaciones en estado ACTIVA.");
         }
-        publicacionRepository.deleteById(id);
+        publicacion.setEliminada(true);
+        publicacionRepository.save(publicacion);
     }
 
     private PublicacionDTO toDTO(Publicacion entity) {
@@ -136,6 +138,7 @@ public class PublicacionServiceImpl implements PublicacionService {
         dto.setDescripcion(entity.getDescripcion());
         dto.setFechaPublicacion(entity.getFechaPublicacion());
         dto.setEstado(entity.getEstado());
+        dto.setEliminada(entity.getEliminada());
         if (entity.getPropiedad() != null) {
             Propiedad propiedad = entity.getPropiedad();
             PropiedadDTO propiedadDTO = new PropiedadDTO();

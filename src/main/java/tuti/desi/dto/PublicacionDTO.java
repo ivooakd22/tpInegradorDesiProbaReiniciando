@@ -22,6 +22,8 @@ public class PublicacionDTO {
 
     private EstadoPublicacion estado;
 
+    private boolean eliminada;
+
     public Long getId() {
         return id;
     }
@@ -76,5 +78,13 @@ public class PublicacionDTO {
 
     public void setEstado(EstadoPublicacion estado) {
         this.estado = estado;
+    }
+
+    public boolean getEliminada() {
+        return eliminada;
+    }
+
+    public void setEliminada(boolean liminadao) {
+        this.eliminada = eliminada;
     }
 }

@@ -13,7 +13,8 @@ import tuti.desi.entity.Propiedad;
 public interface PublicacionRepository extends JpaRepository<Publicacion, Long> {
 
     @Query("SELECT p FROM Publicacion p "
-            + "WHERE (:estado IS NULL OR p.estado = :estado) "
+            + "WHERE p.eliminada = false "
+            + "AND (:estado IS NULL OR p.estado = :estado) "
             + "AND (:ciudad IS NULL OR LOWER(p.propiedad.ciudad) LIKE LOWER(CONCAT('%', :ciudad, '%'))) "
             + "AND (:propiedadId IS NULL OR p.propiedad.id = :propiedadId) "
             + "AND (:precioMin IS NULL OR p.precioMensual >= :precioMin) "
