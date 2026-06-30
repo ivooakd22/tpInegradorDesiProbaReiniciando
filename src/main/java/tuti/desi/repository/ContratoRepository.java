@@ -38,6 +38,8 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
     List<Contrato> findByPropiedadId(Long propiedadId);
 
     
+    boolean existsByPropiedadIdAndEstadoAndEliminadoFalse(Long propiedadId, EstadoContrato estado);
+    
     
 }
 

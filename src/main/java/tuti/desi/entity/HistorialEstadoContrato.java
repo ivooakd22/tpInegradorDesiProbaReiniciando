@@ -1,6 +1,7 @@
+package tuti.desi.entity;
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import tuti.desi.entity.Contrato;
 import tuti.desi.enums.EstadoContrato;
  
 @Entity
