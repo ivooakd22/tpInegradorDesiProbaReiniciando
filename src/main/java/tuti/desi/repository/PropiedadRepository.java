@@ -11,10 +11,18 @@ import java.util.List;
 
 public interface PropiedadRepository extends JpaRepository<Propiedad, Long> {
 
-    @Query("SELECT p FROM Propiedad p WHERE p.activo = true AND (:estado IS NULL OR p.estado = :estado) AND (:tipo IS NULL OR p.tipo = :tipo) AND (:ciudad IS NULL OR LOWER(p.ciudad) LIKE LOWER(CONCAT('%', :ciudad, '%')))")
+    @Query("SELECT p FROM Propiedad p WHERE p.activo = true" +
+           " AND (:estado IS NULL OR p.estado = :estado)" +
+           " AND (:tipo IS NULL OR p.tipo = :tipo)" +
+           " AND (:ciudad IS NULL OR LOWER(p.ciudad) LIKE LOWER(CONCAT('%', :ciudad, '%')))" +
+           " AND (:direccion IS NULL OR LOWER(p.direccion) LIKE LOWER(CONCAT('%', :direccion, '%')))")
     List<Propiedad> filtrar(
             @Param("estado") EstadoPropiedad estado,
             @Param("tipo") TipoPropiedad tipo,
-            @Param("ciudad") String ciudad
+            @Param("ciudad") String ciudad,
+            @Param("direccion") String direccion
     );
+
+    boolean existsByDireccionIgnoreCaseAndCiudadIgnoreCaseAndActivoTrueAndIdNot(
+            String direccion, String ciudad, Long id);
 }

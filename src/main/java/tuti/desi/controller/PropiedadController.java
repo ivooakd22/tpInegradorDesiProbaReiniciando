@@ -24,8 +24,10 @@ public class PropiedadController {
     }
 
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("propiedades", service.findAll(new ListarPropiedadesRequestDTO()));
+    public String listar(@ModelAttribute("filtros") ListarPropiedadesRequestDTO filtros, Model model) {
+        model.addAttribute("propiedades", service.findAll(filtros));
+        model.addAttribute("tipos", TipoPropiedad.values());
+        model.addAttribute("estados", EstadoPropiedad.values());
         return "propiedades/lista";
     }
 
@@ -53,6 +55,7 @@ public class PropiedadController {
             model.addAttribute("tipos", TipoPropiedad.values());
             model.addAttribute("estados", EstadoPropiedad.values());
             model.addAttribute("propietarios", propietarioService.findAll());
+            model.addAttribute("propietarioSeleccionado", dto.getPropietarioId());
             model.addAttribute("titulo", "Nueva Propiedad");
             model.addAttribute("formAction", "/propiedades");
             return "propiedades/form";

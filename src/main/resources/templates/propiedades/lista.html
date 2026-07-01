@@ -25,6 +25,44 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
 
+            <!-- Filtros -->
+            <form method="get" th:action="@{/propiedades}" class="card card-body mb-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label form-label-sm mb-1">Dirección</label>
+                        <input type="text" name="direccion" class="form-control form-control-sm"
+                               th:value="${filtros.direccion}" placeholder="Buscar por dirección...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label form-label-sm mb-1">Ciudad</label>
+                        <input type="text" name="ciudad" class="form-control form-control-sm"
+                               th:value="${filtros.ciudad}" placeholder="Buscar por ciudad...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label form-label-sm mb-1">Tipo</label>
+                        <select name="tipo" class="form-select form-select-sm">
+                            <option value="">Todos</option>
+                            <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"
+                                    th:selected="${filtros.tipo == t}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label form-label-sm mb-1">Estado</label>
+                        <select name="estado" class="form-select form-select-sm">
+                            <option value="">Todos</option>
+                            <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"
+                                    th:selected="${filtros.estado == e}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex gap-1">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="bi bi-search me-1"></i>Filtrar
+                        </button>
+                        <a href="/propiedades" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+                    </div>
+                </div>
+            </form>
+
             <div class="card">
                 <div class="card-body p-0">
                     <div th:if="${#lists.isEmpty(propiedades)}" class="text-center text-muted py-5">
@@ -40,6 +78,7 @@
                                 <th>Ciudad</th>
                                 <th>Tipo</th>
                                 <th>m²</th>
+                                <th>Propietario</th>
                                 <th>Estado</th>
                                 <th class="text-center">Acciones</th>
                             </tr>
@@ -54,6 +93,7 @@
                                 <td th:text="${p.ciudad}"></td>
                                 <td th:text="${p.tipo}"></td>
                                 <td th:text="${p.metrosCuadrados}"></td>
+                                <td th:text="${p.propietarioNombre}"></td>
                                 <td>
                                     <span class="badge"
                                         th:text="${p.estado}"
