@@ -1,6 +1,5 @@
 package tuti.desi.service.impl;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +9,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tuti.desi.dto.ListarFacturasRequestDTO;
-import tuti.desi.dto.PropiedadDTO;
 import tuti.desi.dto.ContratoDTO;
 import tuti.desi.dto.FacturaDTO;
 import tuti.desi.entity.HistorialEstadoFactura;
@@ -65,7 +63,7 @@ public class FacturaServiceImpl implements FacturaService {
                 .orElseThrow(() -> new RuntimeException("Contrato no encontrado con id: " + dto.getContrato().getId()));
 
         if (dto.getEstado() == EstadoFactura.PENDIENTE) {
-            if (!contrato.isActivo()) {
+            if (!contrato.isEliminado()) {
                 throw new IllegalStateException(
                         "Solo se pueden facturar un contrato activo.");
             }

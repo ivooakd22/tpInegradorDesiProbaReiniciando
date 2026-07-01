@@ -29,6 +29,11 @@ public class Contrato {
 
     @Column(nullable = false)
     private Integer diaPago;
+    @Column(nullable = false)
+    private Integer duracionMeses;
+
+    @Column(nullable = false, length = 255)
+    private String descripcion;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
@@ -41,74 +46,95 @@ public class Contrato {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "inquilino_id", nullable = false)
     private Inquilino inquilino;
-    
-    public boolean isActivo() {
-        return this.estado == EstadoContrato.ACTIVO;
+
+    public Long getId() {
+        return id;
     }
 
-	public Long getId() {
-		return id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Integer getDuracionMeses() {
+        return duracionMeses;
+    }
 
-	public LocalDate getFechaInicio() {
-		return fechaInicio;
-	}
+    public void setDuracionMeses(Integer duracionMeses) {
+        this.duracionMeses = duracionMeses;
+    }
 
-	public void setFechaInicio(LocalDate fechaInicio) {
-		this.fechaInicio = fechaInicio;
-	}
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	public LocalDate getFechaFin() {
-		return fechaFin;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public void setFechaFin(LocalDate fechaFin) {
-		this.fechaFin = fechaFin;
-	}
+    public LocalDate getFechaInicio() {
+        return fechaInicio;
+    }
 
-	public Double getMontoMensual() {
-		return montoMensual;
-	}
+    public void setFechaInicio(LocalDate fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
 
-	public void setMontoMensual(Double montoMensual) {
-		this.montoMensual = montoMensual;
-	}
+    public LocalDate getFechaFin() {
+        return fechaFin;
+    }
 
-	public Integer getDiaPago() {
-		return diaPago;
-	}
+    public void setFechaFin(LocalDate fechaFin) {
+        this.fechaFin = fechaFin;
+    }
 
-	public void setDiaPago(Integer diaPago) {
-		this.diaPago = diaPago;
-	}
+    public Double getMontoMensual() {
+        return montoMensual;
+    }
 
-	public EstadoContrato getEstado() {
-		return estado;
-	}
+    public void setMontoMensual(Double montoMensual) {
+        this.montoMensual = montoMensual;
+    }
 
-	public void setEstado(EstadoContrato estado) {
-		this.estado = estado;
-	}
+    public Integer getDiaPago() {
+        return diaPago;
+    }
 
-	public Propiedad getPropiedad() {
-		return propiedad;
-	}
+    public void setDiaPago(Integer diaPago) {
+        this.diaPago = diaPago;
+    }
 
-	public void setPropiedad(Propiedad propiedad) {
-		this.propiedad = propiedad;
-	}
+    public EstadoContrato getEstado() {
+        return estado;
+    }
 
-	public Inquilino getInquilino() {
-		return inquilino;
-	}
+    public void setEstado(EstadoContrato estado) {
+        this.estado = estado;
+    }
 
-	public void setInquilino(Inquilino inquilino) {
-		this.inquilino = inquilino;
-	}
-    
-    
+    public Propiedad getPropiedad() {
+        return propiedad;
+    }
+
+    public void setPropiedad(Propiedad propiedad) {
+        this.propiedad = propiedad;
+    }
+
+    public Inquilino getInquilino() {
+        return inquilino;
+    }
+
+    public void setInquilino(Inquilino inquilino) {
+        this.inquilino = inquilino;
+    }
+    private boolean eliminado = false; // nuevo campo
+
+    // getter y setter
+    public boolean isEliminado() {
+        return eliminado;
+    }
+
+    public void setEliminado(boolean eliminado) {
+        this.eliminado = eliminado;
+    }
+
 }

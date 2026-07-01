@@ -5,8 +5,6 @@ import tuti.desi.dto.PropiedadDTO;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 public interface PropiedadService {
 
     List<PropiedadDTO> findAll(ListarPropiedadesRequestDTO request);

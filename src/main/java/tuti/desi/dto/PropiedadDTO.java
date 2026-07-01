@@ -12,6 +12,8 @@ public class PropiedadDTO {
 
     private Long id;
 
+    private String descripcion;
+
     private String direccion;
 
     private String barrio;
@@ -28,77 +30,94 @@ public class PropiedadDTO {
 
     private Long propietarioId;
 
-	public Long getId() {
-		return id;
-	}
+    private String propietarioNombre;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getDireccion() {
-		return direccion;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
+    public String getDireccion() {
+        return direccion;
+    }
 
-	public String getBarrio() {
-		return barrio;
-	}
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
 
-	public void setBarrio(String barrio) {
-		this.barrio = barrio;
-	}
+    public String getBarrio() {
+        return barrio;
+    }
 
-	public String getCiudad() {
-		return ciudad;
-	}
+    public void setBarrio(String barrio) {
+        this.barrio = barrio;
+    }
 
-	public void setCiudad(String ciudad) {
-		this.ciudad = ciudad;
-	}
+    public String getCiudad() {
+        return ciudad;
+    }
 
-	public TipoPropiedad getTipo() {
-		return tipo;
-	}
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
 
-	public void setTipo(TipoPropiedad tipo) {
-		this.tipo = tipo;
-	}
+    public TipoPropiedad getTipo() {
+        return tipo;
+    }
 
-	public Integer getAmbientes() {
-		return ambientes;
-	}
+    public void setTipo(TipoPropiedad tipo) {
+        this.tipo = tipo;
+    }
 
-	public void setAmbientes(Integer ambientes) {
-		this.ambientes = ambientes;
-	}
+    public Integer getAmbientes() {
+        return ambientes;
+    }
 
-	public Integer getMetrosCuadrados() {
-		return metrosCuadrados;
-	}
+    public void setAmbientes(Integer ambientes) {
+        this.ambientes = ambientes;
+    }
 
-	public void setMetrosCuadrados(Integer metrosCuadrados) {
-		this.metrosCuadrados = metrosCuadrados;
-	}
+    public Integer getMetrosCuadrados() {
+        return metrosCuadrados;
+    }
 
-	public EstadoPropiedad getEstado() {
-		return estado;
-	}
+    public void setMetrosCuadrados(Integer metrosCuadrados) {
+        this.metrosCuadrados = metrosCuadrados;
+    }
 
-	public void setEstado(EstadoPropiedad estado) {
-		this.estado = estado;
-	}
+    public EstadoPropiedad getEstado() {
+        return estado;
+    }
 
-	public Long getPropietarioId() {
-		return propietarioId;
-	}
+    public void setEstado(EstadoPropiedad estado) {
+        this.estado = estado;
+    }
 
-	public void setPropietarioId(Long propietarioId) {
-		this.propietarioId = propietarioId;
-	}
+    public Long getPropietarioId() {
+        return propietarioId;
+    }
+
+    public void setPropietarioId(Long propietarioId) {
+        this.propietarioId = propietarioId;
+    }
+
+    public String getDescripcion() { 
+        return descripcion; 
+    }
+
+    public void setDescripcion(String descripcion) { 
+        this.descripcion = descripcion; 
+    }
+
+    public String getPropietarioNombre() {
+        return propietarioNombre; 
+    }
     
-    
+    public void setPropietarioNombre(String propietarioNombre) { 
+        this.propietarioNombre = propietarioNombre; 
+    }
 }
+

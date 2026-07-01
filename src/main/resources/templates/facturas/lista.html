@@ -1,55 +1,84 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{fragments/layout :: head('Publicaciones')}"></head>
-
+<head th:replace="~{fragments/layout :: head('Facturas')}"></head>
 <body>
 
-    <nav th:replace="~{fragments/layout :: navbar}"></nav>
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
 
-    <div class="container">
+<div class="container">
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2><i class="bi bi-megaphone me-2"></i>Facturas</h2>
-            <a href="/facturas/nuevo" class="btn btn-primary">
-                <i class="bi bi-plus-lg me-1"></i> Nueva Factura
-            </a>
-        </div>
-
-        <form th:action="@{/facturas}" method="get" class="row g-3 mb-4">
-            <!-- Contrato -->
-            <div class="col-md-3">
-                <label for="contratoId" class="form-label">Contrato</label>
-                <select id="contratoId" name="contratoId" class="form-select">
-                    <option value="">-- Todas --</option>
-                    <option th:each="con : ${contratos}" th:value="${con.id}"
-                        th:text="|${con.fechaInicio}, ${prop.fechaFin}|">
-                    </option>
-                </select>
-            </div>
-
-            
-
-            <!-- Botón -->
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Filtrar</button>
-            </div>
-        </form>
-
-
-        <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle me-2"></i>
-            <span th:text="${mensajeExito}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle me-2"></i>
-            <span th:text="${mensajeError}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>       
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-house-door me-2"></i>Facturas</h2>
+        <a href="/facturas/nuevo" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1"></i> Nueva Factura
+        </a>
     </div>
 
-    <div th:replace="~{fragments/layout :: scripts}"></div>
-</body>
+    <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i>
+        <span th:text="${mensajeExito}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        <span th:text="${mensajeError}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
 
+    <div class="card">
+        <div class="card-body p-0">
+            <div th:if="${#lists.isEmpty(facturas)}" class="text-center text-muted py-5">
+                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                No hay facturas registradas. <a href="/facturas/nuevo">Agregar la primera</a>.
+            </div>
+
+			<table th:if="${!#lists.isEmpty(facturas)}" class="table table-hover mb-0">
+			                <thead>
+			                    <tr>
+			                        <th>#</th>
+			                        <th>Concepto</th>
+			                        <th>Estado</th>
+									<th>Importe</th>
+			                        <th class="text-center">Acciones</th>
+			                    </tr>
+			                </thead>
+			                <tbody>
+			                    <tr th:each="p : ${facturas}">
+			                        <td th:text="${p.id}"></td>
+			                        <td th:text="${p.concepto}"></td>
+			                        <td th:text="${p.estado}"></td>
+			                        <td th:text="${p.importe}"></td>
+			                        <td>
+			                            <span class="badge"
+			                                  th:text="${p.estado}"
+			                                  th:classappend="${p.estado.name() == 'PENDIENTE'} ? 'bg-success'
+			                                               : (${p.estado.name() == 'VENCIDA'} ? 'bg-warning text-dark'
+			                                               : (${p.estado.name() == 'PAGADA' || p.estado.name() == 'ANULADA'} ? 'bg-info text-dark'
+			                                               : 'bg-secondary'))">
+			                            </span>
+			                        </td>
+			                        <td class="text-center">
+			                            <a th:href="@{/facturas/{id}/editar(id=${p.id})}"
+			                               class="btn btn-sm btn-outline-warning me-1"
+			                               title="Editar">
+			                                <i class="bi bi-pencil"></i>
+			                            </a>
+			                            <form th:action="@{/facturas/{id}/eliminar(id=${p.id})}"
+			                                  method="post"
+			                                  style="display:inline"
+			                                  onsubmit="return confirm('¿Eliminar esta factura?')">
+			                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+			                                    <i class="bi bi-trash"></i>
+			                                </button>
+			                            </form>
+			                        </td>
+			                    </tr>
+			                </tbody>
+			            </table>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
 </html>
