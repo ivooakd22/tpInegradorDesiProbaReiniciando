@@ -43,7 +43,7 @@
 				<label for="propiedadId" class="form-label">Propiedad</label>
 				<select id="propiedadId" name="propiedadId" class="form-select">
 					<option value="">-- Todas --</option>
-					<option th:each="prop : ${propiedades}" th:value="${prop.id}" th:text="${prop.direccion}"
+					<option th:each="prop : ${propiedades}" th:value="${prop.id}" th:text="${prop.id}"
 						th:selected="${request.propiedadId == prop.id}">
 					</option>
 				</select>
