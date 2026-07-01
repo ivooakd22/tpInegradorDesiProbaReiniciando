@@ -7,11 +7,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import tuti.desi.dto.ContratoDTO;
 import tuti.desi.dto.ListarContratosRequestDTO;
 import tuti.desi.dto.ListarPropiedadesRequestDTO;
-import tuti.desi.dto.PropiedadDTO;
 import tuti.desi.service.ContratoService;
 import tuti.desi.service.PropiedadService;
 import java.util.List;
-import tuti.desi.entity.Inquilino;
 import tuti.desi.enums.EstadoContrato;
 import tuti.desi.service.InquilinoService;
 
@@ -85,6 +83,7 @@ public class ContratoController {
 
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable Long id, Model model) {
+        
         ContratoDTO dto = contratoService.findById(id);
         model.addAttribute("contrato", dto);
         model.addAttribute("propiedades", propiedadService.findAll(new ListarPropiedadesRequestDTO()));
