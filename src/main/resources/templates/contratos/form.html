@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragments/layout :: head(${titulo})}"></head>
+    <body>
+
+        <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+        <div class="container my-5">
+            <h2 th:text="${titulo}"></h2>
+
+            
+            <div th:if="${mensajeError}" class="alert alert-danger" th:text="${mensajeError}"></div>
+            <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+
+           
+            <form th:action="@{${formAction}}" th:object="${contrato}" method="post">
+
+           
+                <div class="mb-3">
+                    <label for="propiedadId" class="form-label">Propiedad</label>
+                    <select id="propiedadId" class="form-select" th:field="*{propiedadId}">
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="p : ${propiedades}" th:value="${p.id}" th:text="${p.direccion}"></option>
+                    </select>
+                </div>
+
+               
+                <div class="mb-3">
+                    <label for="inquilinoId" class="form-label">Inquilino</label>
+                    <select id="inquilinoId" class="form-select" th:field="*{inquilinoId}">
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="i : ${inquilinos}" th:value="${i.id}" th:text="${i.nombre}"></option>
+                    </select>
+                </div>
+
+              
+                <div class="row mb-3">
+                    <div class="col">
+                        <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                        <input type="date" id="fechaInicio" class="form-control" th:field="*{fechaInicio}">
+                    </div>
+
+                    <div class="col">
+                        <label for="fechaFin" class="form-label">Fecha Fin</label>
+                        <input type="date" id="fechaFin" class="form-control" th:field="*{fechaFin}">
+
+                    </div>
+                </div>
+
+               
+                <div class="mb-3">
+                    <label for="duracionMeses" class="form-label">Duración (meses)</label>
+                    <input type="number" id="duracionMeses" class="form-control" th:field="*{duracionMeses}">
+                </div>
+
+               
+                <div class="mb-3">
+                    <label for="montoMensual" class="form-label">Monto Mensual</label>
+                    <input type="number" step="0.01" id="montoMensual" class="form-control" th:field="*{montoMensual}">
+                </div>
+
+               
+                <div class="mb-3">
+                    <label for="diaPago" class="form-label">Día de Vencimiento</label>
+                    <input type="number" id="diaPago" class="form-control" th:field="*{diaPago}">
+                </div>
+
+                
+                <div class="mb-3">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" class="form-control" th:field="*{descripcion}"></textarea>
+                </div>
+
+                
+                <div class="mb-3">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select id="estado" class="form-select" th:field="*{estado}">
+                        <option value="">-- Seleccione --</option>
+                        <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"></option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Guardar</button>
+                <a th:href="@{/contratos}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+
+        <div th:replace="~{fragments/layout :: scripts}"></div>
+    </body>
+</html>

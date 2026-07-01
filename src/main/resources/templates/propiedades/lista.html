@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{fragments/layout :: head('Propiedades')}"></head>
+    <body>
+
+        <nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+        <div class="container">
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-house-door me-2"></i>Propiedades</h2>
+                <a href="/propiedades/nuevo" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1"></i> Nueva Propiedad
+                </a>
+            </div>
+
+            <div th:if="${mensajeExito}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${mensajeExito}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${mensajeError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span th:text="${mensajeError}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <!-- Filtros -->
+            <form method="get" th:action="@{/propiedades}" class="card card-body mb-3">
+                <div class="row g-2 align-items-end">
+                    <div class="col-md-3">
+                        <label class="form-label form-label-sm mb-1">Dirección</label>
+                        <input type="text" name="direccion" class="form-control form-control-sm"
+                               th:value="${filtros.direccion}" placeholder="Buscar por dirección...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label form-label-sm mb-1">Ciudad</label>
+                        <input type="text" name="ciudad" class="form-control form-control-sm"
+                               th:value="${filtros.ciudad}" placeholder="Buscar por ciudad...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label form-label-sm mb-1">Tipo</label>
+                        <select name="tipo" class="form-select form-select-sm">
+                            <option value="">Todos</option>
+                            <option th:each="t : ${tipos}" th:value="${t}" th:text="${t}"
+                                    th:selected="${filtros.tipo == t}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label form-label-sm mb-1">Estado</label>
+                        <select name="estado" class="form-select form-select-sm">
+                            <option value="">Todos</option>
+                            <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"
+                                    th:selected="${filtros.estado == e}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-flex gap-1">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            <i class="bi bi-search me-1"></i>Filtrar
+                        </button>
+                        <a href="/propiedades" class="btn btn-outline-secondary btn-sm">Limpiar</a>
+                    </div>
+                </div>
+            </form>
+
+            <div class="card">
+                <div class="card-body p-0">
+                    <div th:if="${#lists.isEmpty(propiedades)}" class="text-center text-muted py-5">
+                        <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                        No hay propiedades registradas. <a href="/propiedades/nuevo">Agregar la primera</a>.
+                    </div>
+
+                    <table th:if="${!#lists.isEmpty(propiedades)}" class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Dirección</th>
+                                <th>Ciudad</th>
+                                <th>Tipo</th>
+                                <th>m²</th>
+                                <th>Propietario</th>
+                                <th>Estado</th>
+                                <th class="text-center">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="p : ${propiedades}">
+                                <td th:text="${p.id}"></td>
+                                <td>
+                                    <strong th:text="${p.direccion}"></strong>
+                                    <small th:if="${p.barrio}" class="text-muted d-block" th:text="${p.barrio}"></small>
+                                </td>
+                                <td th:text="${p.ciudad}"></td>
+                                <td th:text="${p.tipo}"></td>
+                                <td th:text="${p.metrosCuadrados}"></td>
+                                <td th:text="${p.propietarioNombre}"></td>
+                                <td>
+                                    <span class="badge"
+                                        th:text="${p.estado}"
+                                        th:classappend="${p.estado.name() == 'DISPONIBLE'} ? 'bg-success'
+                                                    : (${p.estado.name() == 'RESERVADA'} ? 'bg-warning text-dark'
+                                                    : (${p.estado.name() == 'ALQUILADA'} ? 'bg-info text-dark'
+                                                    : 'bg-secondary'))">
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <a th:href="@{/propiedades/{id}/editar(id=${p.id})}"
+                                    class="btn btn-sm btn-outline-warning me-1"
+                                    title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form th:action="@{/propiedades/{id}/eliminar(id=${p.id})}"
+                                        method="post"
+                                        style="display:inline"
+                                        onsubmit="return confirm('¿Eliminar esta propiedad?')">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="~{fragments/layout :: scripts}"></div>
+    </body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1200">
+    <title th:text="${titulo} + ' | Sistema de Alquileres'">Sistema de Alquileres</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; min-width: 1200px; }
+        .navbar-brand { font-weight: 700; letter-spacing: 0.5px; }
+        .table thead { background-color: #0d6efd; color: white; }
+        .card { border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    </style>
+</head>
+
+<body>
+<nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+    <div class="container">
+        <a class="navbar-brand" href="/home">
+            <i class="bi bi-building"></i> Sistema de Alquileres
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/propiedades">
+                        <i class="bi bi-house-door"></i> Propiedades
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/publicaciones">
+                        <i class="bi bi-megaphone"></i> Publicaciones
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contratos">
+                        <i class="bi bi-file-earmark-text"></i> Contratos
+                    </a>
+                </li>
+				<li class="nav-item">
+	                <a class="nav-link" href="/facturas">
+	                    <i class="bi bi-currency-dollar"></i> Facturas
+	                </a>
+	            </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div th:fragment="scripts">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+</div>
+</body>
+</html>
