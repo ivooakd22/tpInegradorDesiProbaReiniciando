@@ -7,14 +7,13 @@ import tuti.desi.dto.ListarContratosRequestDTO;
 
 public interface ContratoService {
 
-     List<ContratoDTO> findAll(ListarContratosRequestDTO filtro);
+    List<ContratoDTO> findAll(ListarContratosRequestDTO filtro);
     ContratoDTO findById(Long id);
     List<ContratoDTO> findByInquilino(Long inquilinoId);
     List<ContratoDTO> findByPropiedad(Long propiedadId);
     LocalDate calcularFechaFin(LocalDate fechaInicio, Integer duracionMeses);
     void save(ContratoDTO dto);
     void delete(Long id);
-  
 }
 
 

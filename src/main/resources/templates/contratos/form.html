@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{fragments/layout :: head(${titulo})}"></head>
@@ -41,7 +40,6 @@
                         <input type="date" id="fechaInicio" class="form-control" th:field="*{fechaInicio}">
                     </div>
 
-=======
                     <div class="col">
                         <label for="fechaFin" class="form-label">Fecha Fin</label>
                         <input type="date" id="fechaFin" class="form-control" th:field="*{fechaFin}">
@@ -82,7 +80,6 @@
                     </select>
                 </div>
 
-             
                 <button type="submit" class="btn btn-primary">Guardar</button>
                 <a th:href="@{/contratos}" class="btn btn-secondary">Cancelar</a>
             </form>

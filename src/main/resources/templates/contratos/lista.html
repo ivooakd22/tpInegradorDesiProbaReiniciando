@@ -3,7 +3,7 @@
 <head th:replace="~{fragments/layout :: head('Listado de Contratos')}"></head>
 <body>
 
-<nav th:replace="~{fragments/layout :: navbar}"></nav>
+        <nav th:replace="~{fragments/layout :: navbar}"></nav>
 
 <div class="container my-5">
     <h2 class="mb-4">Listado de Contratos</h2>
@@ -74,13 +74,13 @@
             <td>
                 <!-- Botón Editar -->
                 <a th:href="@{'/contratos/' + ${contrato.id} + '/editar'}"
-                   class="btn btn-warning btn-sm">
+                    class="btn btn-warning btn-sm">
                     <i class="bi bi-pencil"></i> Editar
                 </a>
 
                 <!-- Botón Eliminar -->
                 <form th:action="@{'/contratos/' + ${contrato.id} + '/eliminar'}"
-                      method="post" style="display:inline">
+                    method="post" style="display:inline">
                     <button type="submit" class="btn btn-danger btn-sm"
                             onclick="return confirm('¿Seguro que deseas eliminar este contrato?');">
                         <i class="bi bi-trash"></i> Eliminar
@@ -99,7 +99,7 @@
     </div>
 </div>
 
-<div th:replace="~{fragments/layout :: scripts}"></div>
-</body>
+        <div th:replace="~{fragments/layout :: scripts}"></div>
+    </body>
 </html>
 

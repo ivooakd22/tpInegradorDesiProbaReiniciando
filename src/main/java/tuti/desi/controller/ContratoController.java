@@ -83,7 +83,6 @@ public class ContratoController {
 
     @GetMapping("/{id}/editar")
     public String editar(@PathVariable Long id, Model model) {
-        
         ContratoDTO dto = contratoService.findById(id);
         model.addAttribute("contrato", dto);
         model.addAttribute("propiedades", propiedadService.findAll(new ListarPropiedadesRequestDTO()));

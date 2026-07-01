@@ -21,7 +21,6 @@ public class HistorialEstadoContrato {
 
     private LocalDate fechaCambio;
 
-    // --- Getters y Setters ---
     public Long getId() {
         return id;
     }

@@ -12,14 +12,10 @@ import org.springframework.data.repository.query.Param;
 
 @Repository
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
-
-    
     List<Contrato> findByEliminadoFalse();
 
-    
     boolean existsByPropiedadIdAndEstado(Long propiedadId, EstadoContrato estado);
 
-    
     @Query("SELECT c FROM Contrato c WHERE " +
            "(:propiedadId IS NULL OR c.propiedad.id = :propiedadId) AND " +
            "(:inquilinoId IS NULL OR c.inquilino.id = :inquilinoId) AND " +
@@ -31,16 +27,10 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
                            @Param("estado") EstadoContrato estado,
                            @Param("fechaInicio") LocalDate fechaInicio);
 
-   
     List<Contrato> findByInquilinoId(Long inquilinoId);
 
-  
     List<Contrato> findByPropiedadId(Long propiedadId);
-  
 
-    
     boolean existsByPropiedadIdAndEstadoAndEliminadoFalse(Long propiedadId, EstadoContrato estado);
-    
-    
 }
 

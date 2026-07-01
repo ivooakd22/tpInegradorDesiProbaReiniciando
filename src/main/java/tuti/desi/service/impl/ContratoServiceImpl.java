@@ -40,7 +40,6 @@ public class ContratoServiceImpl implements ContratoService {
 
     @Override
     public List<ContratoDTO> findAll(ListarContratosRequestDTO filtro) {
-
         if (filtro == null) {
             return contratoRepository.findByEliminadoFalse()
                     .stream().map(this::toDTO).toList();
@@ -88,7 +87,7 @@ public class ContratoServiceImpl implements ContratoService {
     public void save(ContratoDTO dto) {
 
         validarContrato(dto);
-        //asociadas
+
         Propiedad propiedad = propiedadRepository.findById(dto.getPropiedadId())
                 .orElseThrow(() -> new RuntimeException("La propiedad buscada no existe"));
         Inquilino inquilino = inquilinoRepository.findById(dto.getInquilinoId())
@@ -108,7 +107,6 @@ public class ContratoServiceImpl implements ContratoService {
         }
 
         //Valido entre estados 
-   
             if (estadoAnterior == EstadoContrato.FINALIZADO || estadoAnterior == EstadoContrato.RESCINDIDO) {
                 if (nuevoEstado == EstadoContrato.ACTIVO) {
                     throw new IllegalArgumentException("No se permite activar un contrato que ya está FINALIZADO o RESCINDIDO.");
