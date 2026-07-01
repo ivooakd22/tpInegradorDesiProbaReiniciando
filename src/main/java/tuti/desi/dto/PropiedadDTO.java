@@ -12,6 +12,26 @@ public class PropiedadDTO {
 
     private Long id;
 
+    private String descripcion;
+
+    private String direccion;
+
+    private String barrio;
+
+    private String ciudad;
+
+    private TipoPropiedad tipo;
+
+    private Integer ambientes;
+
+    private Integer metrosCuadrados;
+
+    private EstadoPropiedad estado;
+
+    private Long propietarioId;
+
+    private String propietarioNombre;
+
     public Long getId() {
         return id;
     }
@@ -84,20 +104,20 @@ public class PropiedadDTO {
         this.propietarioId = propietarioId;
     }
 
-    private String direccion;
+    public String getDescripcion() { 
+        return descripcion; 
+    }
 
-    private String barrio;
+    public void setDescripcion(String descripcion) { 
+        this.descripcion = descripcion; 
+    }
 
-    private String ciudad;
-
-    private TipoPropiedad tipo;
-
-    private Integer ambientes;
-
-    private Integer metrosCuadrados;
-
-    private EstadoPropiedad estado;
-
-    private Long propietarioId;
+    public String getPropietarioNombre() {
+        return propietarioNombre; 
+    }
+    
+    public void setPropietarioNombre(String propietarioNombre) { 
+        this.propietarioNombre = propietarioNombre; 
+    }
 }
 
