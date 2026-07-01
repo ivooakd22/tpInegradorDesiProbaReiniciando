@@ -162,7 +162,7 @@ public class FacturaServiceImpl implements FacturaService {
             contratoDTO.setFechaInicio(contrato.getFechaInicio());
             contratoDTO.setFechaFin(contrato.getFechaFin());
             contratoDTO.setDiaPago(contrato.getDiaPago());
-            contratoDTO.setEstado(contrato.getEstado());
+            contratoDTO.setEstado(contrato.getEstado().name());
             if (contrato.getInquilino() != null)
             	contratoDTO.setInquilinoId(contrato.getInquilino().getId());
             if (contrato.getPropiedad() != null)
