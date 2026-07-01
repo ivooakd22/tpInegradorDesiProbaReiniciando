@@ -30,13 +30,13 @@
 
 		<form th:action="@{/facturas}" method="get" class="row g-3 mb-4 b-light p-3 rounded bg-light">
 			<div class="col-md-3">
-				<label class="form-label fw-semibold">Contrato <span class="text-danger">*</span></label>
-<!--					<select class="form-select" th:field="*{contrato.id}" required>-->
-<!--						<option value="">-- Seleccionar Contrato --</option>-->
-<!--						<option th:each="con : ${contratos}" th:value="${con.id}"-->
-<!--							th:text="${con.propiedadDireccion}">-->
-<!--						</option>-->
-<!--					</select>-->
+				<label for="contratoId" class="form-label">Contrato</label>
+				<select id="contratoId" name="contratoId" class="form-select">
+					<option value="">-- Todas --</option>
+					<option th:each="con : ${contratos}" th:value="${con.id}" th:text="${con.propiedadDireccion}"
+						th:selected="${request.contratoId == con.id}">
+					</option>
+				</select>
 			</div>
 
 			<div class="col-md-3">
