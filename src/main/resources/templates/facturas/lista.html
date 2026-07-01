@@ -33,7 +33,7 @@
 				<label for="contratoId" class="form-label">Contrato</label>
 				<select id="contratoId" name="contratoId" class="form-select">
 					<option value="">-- Todas --</option>
-					<option th:each="con : ${contratos}" th:value="${con.id}" th:text="${con.propiedadDireccion}"
+					<option th:each="con : ${contratos}" th:value="${con.id}" th:text="${con.id}"
 						th:selected="${request.contratoId == con.id}">
 					</option>
 				</select>
