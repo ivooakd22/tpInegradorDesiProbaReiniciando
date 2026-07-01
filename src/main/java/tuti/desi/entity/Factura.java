@@ -38,16 +38,16 @@ public class Factura {
     @Column(name = "eliminada",nullable = false)
     private Boolean eliminada = false;
     
-    @Column(name = "fecha_pago", nullable = false)
+    @Column(name = "fecha_pago", nullable = true)
     private LocalDate fechaPago;
     
-    @Column(name = "medio_pago", nullable = false)
+    @Column(name = "medio_pago", nullable = true)
     private MedioPago medioPago;
 
-    @Column(name = "importe_pagado", nullable = false)
+    @Column(name = "importe_pagado", nullable = true)
     private BigDecimal importePagado;
 
-    @Column(name = "interes", nullable = false)
+    @Column(name = "interes", nullable = true)
     private BigDecimal interes;
 
     @Column(name = "concepto_facturado",nullable = false, length = 200)

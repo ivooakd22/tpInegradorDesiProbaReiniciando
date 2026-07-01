@@ -14,6 +14,7 @@ import tuti.desi.dto.FacturaDTO;
 import tuti.desi.entity.HistorialEstadoFactura;
 import tuti.desi.entity.Contrato;
 import tuti.desi.entity.Factura;
+import tuti.desi.enums.EstadoContrato;
 import tuti.desi.enums.EstadoFactura;
 import tuti.desi.repository.HistorialEstadoFacturaRepository;
 import tuti.desi.repository.ContratoRepository;
@@ -63,7 +64,7 @@ public class FacturaServiceImpl implements FacturaService {
                 .orElseThrow(() -> new RuntimeException("Contrato no encontrado con id: " + dto.getContrato().getId()));
 
         if (dto.getEstado() == EstadoFactura.PENDIENTE) {
-            if (!contrato.isEliminado()) {
+            if (contrato.getEstado() != EstadoContrato.ACTIVO) {
                 throw new IllegalStateException(
                         "Solo se pueden facturar un contrato activo.");
             }
@@ -121,7 +122,7 @@ public class FacturaServiceImpl implements FacturaService {
         if (dto.getContrato().getId() == null) {
             throw new IllegalArgumentException("El contrato es obligatorio.");
         }
-        if (dto.getFechaEmision() == null || !(tieneFormatoFechaCorrecto(dto.getFechaEmision().toString(), "yyyy-mm-dd")) )
+        if (dto.getFechaEmision() == null || (tieneFormatoFechaCorrecto(dto.getFechaEmision().toString(), "yyyy-mm-dd")) )
         {
             throw new IllegalArgumentException("La fecha es nula o no tiene el formato valido yyyy-mm-dd");
         }
