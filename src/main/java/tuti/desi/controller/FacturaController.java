@@ -8,6 +8,7 @@ import tuti.desi.dto.ListarContratosRequestDTO;
 import tuti.desi.dto.ListarFacturasRequestDTO;
 import tuti.desi.dto.ListarPropiedadesRequestDTO;
 import tuti.desi.dto.FacturaDTO;
+import tuti.desi.enums.EstadoContrato;
 import tuti.desi.enums.EstadoFactura;
 import tuti.desi.enums.MedioPago;
 import tuti.desi.service.ContratoService;
@@ -46,8 +47,12 @@ public class FacturaController {
 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        model.addAttribute("factura", new FacturaDTO());
-        model.addAttribute("contratos", contratoService.findAll(new ListarContratosRequestDTO()));
+    	FacturaDTO factura = new FacturaDTO();
+    	factura.setEstado(EstadoFactura.PENDIENTE);
+        model.addAttribute("factura", factura);
+        ListarContratosRequestDTO filtroContratos = new ListarContratosRequestDTO();
+        filtroContratos.setEstado(EstadoContrato.ACTIVO.name());
+        model.addAttribute("contratos", contratoService.findAll(filtroContratos));
         model.addAttribute("estados", EstadoFactura.values());
         model.addAttribute("mediosPago", MedioPago.values());
         model.addAttribute("titulo", "Nueva Factura");

@@ -77,21 +77,41 @@ public class FacturaServiceImpl implements FacturaService {
                         }
                     });
         }
-
-        if (dto.getId() != null
-                && factura.getEstado() != EstadoFactura.PENDIENTE
-                && !factura.getConceptoFacturado().equals(dto.getConcepto())) {
-
-            throw new IllegalStateException(
-                    "No se pueden modificar las condiciones de una factura que no esta pendiente.");
-        }
-
+        
         EstadoFactura estadoAnterior = factura.getEstado();
 
         EstadoFactura nuevoEstado = dto.getEstado() != null
                 ? dto.getEstado()
                 : EstadoFactura.PENDIENTE;
+        
 
+	        //valido que si esta anulada no se puede modificar        
+	        if (dto.getId() != null && estadoAnterior == EstadoFactura.ANULADA || estadoAnterior == EstadoFactura.PAGADA)
+	        {
+	            throw new IllegalStateException("No se puede editar una factura en estado " + estadoAnterior.name());
+	        }
+	        
+	        if (dto.getId() != null && (estadoAnterior == EstadoFactura.VENCIDA && nuevoEstado != EstadoFactura.PAGADA && nuevoEstado != EstadoFactura.VENCIDA ))
+	        {
+	        	throw new IllegalStateException("No se puede cambiar la factura de estado " + estadoAnterior.name() + " a estado " + nuevoEstado.name());
+	        }
+	        
+	        if (nuevoEstado == EstadoFactura.PAGADA && 
+	        		(dto.getFechaPago() == null || dto.getMedioPago() == null || dto.getImportePagado() == null || dto.getImportePagado().signum() <= 0))
+	        {
+	        	throw new IllegalStateException("No se puede grabar la factura a estado " + nuevoEstado.name() + " sin los datos de pago.");
+	        }
+	        if (nuevoEstado != EstadoFactura.PAGADA && 
+	        		(dto.getFechaPago() != null || dto.getMedioPago() != null || dto.getImportePagado() != null || dto.getInteres() != null))
+	        {
+	        	throw new IllegalStateException("No se puede grabar la factura a estado " + nuevoEstado.name() + " con datos de pago.");
+	        }       
+	        if (dto.getId() != null && nuevoEstado == EstadoFactura.VENCIDA && factura.getImporte() != dto.getImporte())
+	        {
+	        	throw new IllegalStateException("No se puede editar el monto de una factura en estado " + estadoAnterior.name());
+	    	} 
+        
+        
         factura.setContrato(contrato);
         factura.setFechaEmision(dto.getFechaEmision());
         factura.setFechaVencimiento(dto.getFechaVencimiento());
@@ -126,6 +146,18 @@ public class FacturaServiceImpl implements FacturaService {
         {
             throw new IllegalArgumentException("La fecha es nula o no tiene el formato valido yyyy-mm-dd");
         }
+        if (dto.getFechaVencimiento().isBefore(dto.getFechaEmision()))
+        {
+        	throw new IllegalArgumentException("La fecha de vencimiento es menor a la fecha de emision");
+        }
+        if (dto.getImporte().signum() <= 0)
+        {
+        	throw new IllegalArgumentException("Los importes deben ser numeros positivos.");
+        }
+		if (dto.getImportePagado() != null && dto.getImporte().signum() <= 0)
+        {
+        	throw new IllegalArgumentException("Los importes deben ser numeros positivos.");
+        }
         if (dto.getEstado() == null) {
             throw new IllegalArgumentException("El estado de la publicación es obligatorio.");
         }
@@ -136,8 +168,8 @@ public class FacturaServiceImpl implements FacturaService {
         Factura factura = facturaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Publicación no encontrada con id: " + id));
 
-        if (factura.getEstado() != EstadoFactura.PENDIENTE) {
-            throw new IllegalStateException("Solo se pueden eliminar factura en estado Pendiente.");
+        if (factura.getEstado() == EstadoFactura.PAGADA) {
+            throw new IllegalStateException("No se puede eliminar una factura que ya ha sido pagada.");
         }
         factura.setEliminada(true);
         facturaRepository.save(factura);

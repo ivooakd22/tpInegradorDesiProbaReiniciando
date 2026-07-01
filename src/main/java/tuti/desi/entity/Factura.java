@@ -33,7 +33,7 @@ public class Factura {
     private BigDecimal importe;
 
     @Column(name = "estado", nullable = false)
-    private EstadoFactura estado;
+    private EstadoFactura estado = EstadoFactura.PENDIENTE;
     
     @Column(name = "eliminada",nullable = false)
     private Boolean eliminada = false;

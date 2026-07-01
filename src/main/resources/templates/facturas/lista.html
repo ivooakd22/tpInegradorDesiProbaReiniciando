@@ -119,9 +119,9 @@
 							<td th:text="${p.fechaVencimiento}"></td>
 							<td th:text="${p.importe}"></td>
 							<td>
-								<span class="badge" th:text="${p.estado}" th:classappend="${p.estado.name() == 'PENDIENTE'} ? 'bg-success'
+								<span class="badge" th:text="${p.estado}" th:classappend="${p.estado.name() == 'PENDIENTE'} ? 'bg-primary'
 			                                               : (${p.estado.name() == 'VENCIDA'} ? 'bg-warning text-dark'
-			                                               : (${p.estado.name() == 'PAGADA' || p.estado.name() == 'ANULADA'} ? 'bg-info text-dark'
+			                                               : (${p.estado.name() == 'PAGADA'} ? 'bg-success text-dark'
 			                                               : 'bg-secondary'))">
 								</span>
 							</td>
