@@ -27,6 +27,9 @@ public class Propiedad {
     @Column(nullable = false, length = 100)
     private String ciudad;
 
+    @Column(length = 1000)
+    private String descripcion;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private TipoPropiedad tipo;
@@ -78,6 +81,14 @@ public class Propiedad {
 
     public void setCiudad(String ciudad) {
         this.ciudad = ciudad;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public TipoPropiedad getTipo() {
